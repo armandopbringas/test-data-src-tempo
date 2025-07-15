@@ -1,87 +1,22 @@
 
-// Use import.meta.env variables for configuration (Vite)
-const SPACE_ID = import.meta.env.CONTENTFUL_SPACE_ID || 'vlp0dhcdis5o';
-const ACCESS_TOKEN = import.meta.env.CONTENTFUL_ACCESS_TOKEN || 'b2aAP4V65lRopi1pD-GiIiPp2zlbEY-Y11b5y3HB5Xg';
-const ENVIRONMENT = import.meta.env.CONTENTFUL_ENVIRONMENT || 'master';
+import { createClient } from 'contentful';
 
-// Construct the GraphQL endpoint URL
-const CONTENTFUL_GRAPHQL_URL = `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}/environments/${ENVIRONMENT}`;
+// Use process.env variables for configuration (works in both server and client)
+const SPACE_ID = process.env.CONTENTFUL_SPACE_ID || 'vlp0dhcdis5o';
+const ACCESS_TOKEN = process.env.CONTENTFUL_ACCESS_TOKEN;
+const ENVIRONMENT = process.env.CONTENTFUL_ENVIRONMENT || 'master';
 
-/**
- * Execute a GraphQL query against Contentful
- *
- * @param query - GraphQL query string
- * @param variables - Optional variables for the query
- * @returns Promise with the query results
- */
-export async function executeQuery<T = any>(
-  query: string,
-  variables?: Record<string, any>
-): Promise<T> {
-  try {
-    if (variables) {
-      console.log('With variables:', JSON.stringify(variables, null, 2));
-    }
-
-    const response = await fetch(CONTENTFUL_GRAPHQL_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ACCESS_TOKEN}`,
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    });
-
-    // Get the response text first for debugging
-    const responseText = await response.text();
-
-    if (!response.ok) {
-      console.error('GraphQL request failed with status:', response.status);
-      console.error('Response body:', responseText);
-      throw new Error(`GraphQL request failed: ${response.status} ${response.statusText}`);
-    }
-
-    // Parse JSON after getting the text
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (e) {
-      console.error('Failed to parse JSON response:', responseText);
-      throw new Error(`Invalid JSON response: ${responseText}`);
-    }
-
-    if (data.errors) {
-      console.error('GraphQL errors:', JSON.stringify(data.errors, null, 2));
-      throw new Error(
-        `GraphQL errors: ${data.errors.map((e: any) => e.message).join(', ')}`
-      );
-    }
-
-    return data.data as T;
-  } catch (error) {
-    console.error('GraphQL query error:', error);
-    throw error;
-  }
+// Add validation for required environment variables
+if (!ACCESS_TOKEN) {
+  throw new Error('CONTENTFUL_ACCESS_TOKEN is required. Please add it to your .env file.');
 }
 
-/**
- * Test query to verify the connection to Contentful
- * Returns basic schema information
- */
-export async function testConnection() {
-  const query = `
-    {
-      __typename
-    }
-  `;
+// Create Contentful client using SDK
+export const contentfulClient = createClient({
+  space: SPACE_ID,
+  accessToken: ACCESS_TOKEN,
+  environment: ENVIRONMENT,
+});
 
-  return executeQuery(query);
-}
 
-export default {
-  executeQuery,
-  testConnection,
-};
+export default contentfulClient;

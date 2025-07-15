@@ -12,7 +12,7 @@ function App({ homepageData }: AppProps = {}) {
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchHomepageData = async () => {
-    if (isLoading || data) return; // Evita múltiples llamadas
+    if (isLoading || data) return;
 
     setIsLoading(true);
     try {
@@ -27,17 +27,15 @@ function App({ homepageData }: AppProps = {}) {
     }
   };
 
-  // Solo llamar si no hay datos del servidor
   if (!data && !isLoading) {
     fetchHomepageData();
   }
 
-  // Función para extraer datos completos de BlockImageText
+  // SDK
   const getBlockImageTextData = () => {
     try {
-      const blocks = data?.homepageCollection?.items?.[0]?.content?.links?.entries?.block;
-      if (!blocks || !Array.isArray(blocks)) {
-        console.log("No blocks found");
+      if (!data?.fields) {
+        console.log("No fields found");
         return {
           title: "Default Title",
           description: ["Default description"],
@@ -46,37 +44,45 @@ function App({ homepageData }: AppProps = {}) {
         };
       }
 
-      // Buscar el primer bloque del tipo BlockImageText
-      const blockImageText = blocks.find(block => block?.__typename === "BlockImageText");
+      // Find the first embedded-entry-block that is BlockImageText
+      const contentBlocks = data.fields.content?.content || [];
+      const blockImageText = contentBlocks.find((block: any) => {
+        return block.nodeType === 'embedded-entry-block' &&
+          block.data?.target?.sys?.contentType?.sys?.id === 'blockImageText';
+      });
 
-      if (!blockImageText) {
-        console.log("No BlockImageText found");
-        return {
-          title: "Default Title",
-          description: ["Default description"],
-          imageUrl: "",
-          imageDescription: "Image"
-        };
+      if (blockImageText) {
+
+        const blockFields = blockImageText.data?.target?.fields;
+        if (blockFields) {
+          // rich text
+          const title = blockFields.text?.content?.[0]?.content?.[0]?.value || "Default Title";
+
+          // paragraphs
+          const paragraphs = blockFields.text?.content
+            ?.filter((item: any) => item.nodeType === "paragraph")
+            ?.map((paragraph: any) => paragraph.content?.[0]?.value)
+            ?.filter((text: string) => text && text.trim() !== "") || ["Default description"];
+
+          // Image
+          const imageUrl = blockFields.image?.fields?.file?.url || "";
+          const imageDescription = blockFields.image?.fields?.description || blockFields.image?.fields?.title || "Image";
+
+          return {
+            title,
+            description: paragraphs,
+            imageUrl: imageUrl ? `https:${imageUrl}` : "",
+            imageDescription
+          };
+        }
       }
 
-      // Extraer título
-      const title = blockImageText?.text?.json?.content?.[0]?.content?.[0]?.value || "Default Title";
-
-      // Extraer párrafos
-      const paragraphs = blockImageText?.text?.json?.content
-        ?.filter((item: any) => item?.nodeType === "paragraph")
-        ?.map((paragraph: any) => paragraph?.content?.[0]?.value)
-        ?.filter((text: string) => text && text.trim() !== "") || ["Default description"];
-
-      // Extraer datos de imagen
-      const imageUrl = blockImageText?.image?.url || "";
-      const imageDescription = blockImageText?.image?.description || blockImageText?.image?.title || "Image";
-
+      // Fallback
       return {
-        title,
-        description: paragraphs,
-        imageUrl,
-        imageDescription
+        title: "Default Title",
+        description: ["Default description"],
+        imageUrl: "",
+        imageDescription: "Image"
       };
     } catch (error) {
       console.error("Error extracting BlockImageText data:", error);
