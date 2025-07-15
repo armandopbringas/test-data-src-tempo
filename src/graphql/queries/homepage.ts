@@ -21,6 +21,24 @@ export const GET_HOMEPAGE_DATA = `
                   blockWidth
                   showCaption
                 }
+                ... on BlockImageText {
+                  text {
+                    json
+                  }
+                  image {
+                    sys {
+                      id
+                    }
+                    url
+                    title
+                    description
+                    width
+                    height
+                    contentType
+                  }
+                  imageSide
+                  imageType
+                }
               }
             }
             assets {

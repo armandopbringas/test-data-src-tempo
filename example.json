@@ -1,0 +1,157 @@
+{
+  "data": {
+    "homepageCollection": {
+      "items": [
+        {
+          "content": {
+            "links": {
+              "entries": {
+                "block": [
+                  {
+                    "__typename": "ASpacer"
+                  },
+                  {
+                    "__typename": "BlockImageOrVideo"
+                  },
+                  {
+                    "__typename": "BlockImageText",
+                    "text": {
+                      "json": {
+                        "nodeType": "document",
+                        "data": {},
+                        "content": [
+                          {
+                            "nodeType": "heading-2",
+                            "data": {},
+                            "content": [
+                              {
+                                "nodeType": "text",
+                                "value": "How we kickstart projects",
+                                "marks": [],
+                                "data": {}
+                              }
+                            ]
+                          },
+                          {
+                            "nodeType": "paragraph",
+                            "data": {},
+                            "content": [
+                              {
+                                "nodeType": "text",
+                                "value": "When a community has a vision — but lacks resources or meets systemic roadblocks — the Neighborhood Design Center can help. ",
+                                "marks": [],
+                                "data": {}
+                              }
+                            ]
+                          },
+                          {
+                            "nodeType": "paragraph",
+                            "data": {},
+                            "content": [
+                              {
+                                "nodeType": "text",
+                                "value": "We bring people together, build capacity, conduct research, and provide top-notch design and planning services (often for pro bono). ",
+                                "marks": [],
+                                "data": {}
+                              }
+                            ]
+                          },
+                          {
+                            "nodeType": "paragraph",
+                            "data": {},
+                            "content": [
+                              {
+                                "nodeType": "text",
+                                "value": "With the right tools, communities can secure funding for implementation and maintenance, and bring their dreams to life.",
+                                "marks": [],
+                                "data": {}
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "imageSide": false,
+                    "imageType": "Large Circle",
+                    "image": {
+                      "sys": {
+                        "id": "XHoMRIpilOp6g78o2YLqg"
+                      },
+                      "url": "https://images.ctfassets.net/vlp0dhcdis5o/XHoMRIpilOp6g78o2YLqg/9f397f85fc51427fa22be20373062189/Design-Workshop.jpg",
+                      "description": ""
+                    }
+                  },
+                  {
+                    "__typename": "BlockSlideshow"
+                  },
+                  {
+                    "__typename": "BlockImageText",
+                    "text": {
+                      "json": {
+                        "nodeType": "document",
+                        "data": {},
+                        "content": [
+                          {
+                            "nodeType": "heading-2",
+                            "data": {},
+                            "content": [
+                              {
+                                "nodeType": "text",
+                                "value": "Addressing historic inequity",
+                                "marks": [],
+                                "data": {}
+                              }
+                            ]
+                          },
+                          {
+                            "nodeType": "paragraph",
+                            "data": {},
+                            "content": [
+                              {
+                                "nodeType": "text",
+                                "value": "From our founding over fifty years ago, our mission has always been to serve low- and moderate- income communities affected by institutional neglect. ",
+                                "marks": [],
+                                "data": {}
+                              }
+                            ]
+                          },
+                          {
+                            "nodeType": "paragraph",
+                            "data": {},
+                            "content": [
+                              {
+                                "nodeType": "text",
+                                "value": "We redirect resources to underserved areas because everyone deserves healthy, high-quality public spaces.",
+                                "marks": [],
+                                "data": {}
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "imageSide": false,
+                    "imageType": "Large Circle",
+                    "image": {
+                      "sys": {
+                        "id": "2gIrEFTpoplU3lr0M4913P"
+                      },
+                      "url": "https://images.ctfassets.net/vlp0dhcdis5o/2gIrEFTpoplU3lr0M4913P/472aa0338693386db9885acd8f2e5632/retro_NDC.jpg",
+                      "description": ""
+                    }
+                  },
+                  {
+                    "__typename": "BlockPullquoteGroup"
+                  },
+                  {
+                    "__typename": "BlockSlideshow"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

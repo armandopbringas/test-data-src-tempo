@@ -1,6 +1,5 @@
 import './App.css'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import { getHomepage } from './services/contentfulservice.ts'
 import IndexSectionInfo from './components/IndexSection/indexSectionInfo.tsx'
 
@@ -9,13 +8,12 @@ interface AppProps {
 }
 
 function App({ homepageData }: AppProps = {}) {
-  const [count, setCount] = useState(0)
   const [data, setData] = useState<any>(homepageData)
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchHomepageData = async () => {
     if (isLoading || data) return; // Evita múltiples llamadas
-    
+
     setIsLoading(true);
     try {
       console.log('🚀 Fetching homepage data from Contentful...');
@@ -34,40 +32,70 @@ function App({ homepageData }: AppProps = {}) {
     fetchHomepageData();
   }
 
-  const getBlockImageText = () => {
+  // Función para extraer datos completos de BlockImageText
+  const getBlockImageTextData = () => {
     try {
-      const block = data?.homepageCollection?.items?.[0]?.content?.links?.entries?.block?.[2];
+      const blocks = data?.homepageCollection?.items?.[0]?.content?.links?.entries?.block;
+      if (!blocks || !Array.isArray(blocks)) {
+        console.log("No blocks found");
+        return {
+          title: "Default Title",
+          description: ["Default description"],
+          imageUrl: "",
+          imageDescription: "Image"
+        };
+      }
+
+      // Buscar el primer bloque del tipo BlockImageText
+      const blockImageText = blocks.find(block => block?.__typename === "BlockImageText");
+
+      if (!blockImageText) {
+        console.log("No BlockImageText found");
+        return {
+          title: "Default Title",
+          description: ["Default description"],
+          imageUrl: "",
+          imageDescription: "Image"
+        };
+      }
+
+      // Extraer título
+      const title = blockImageText?.text?.json?.content?.[0]?.content?.[0]?.value || "Default Title";
+
+      // Extraer párrafos
+      const paragraphs = blockImageText?.text?.json?.content
+        ?.filter((item: any) => item?.nodeType === "paragraph")
+        ?.map((paragraph: any) => paragraph?.content?.[0]?.value)
+        ?.filter((text: string) => text && text.trim() !== "") || ["Default description"];
+
+      // Extraer datos de imagen
+      const imageUrl = blockImageText?.image?.url || "";
+      const imageDescription = blockImageText?.image?.description || blockImageText?.image?.title || "Image";
+
       return {
-        title: block?.text?.json?.content?.[0]?.content?.[0]?.value || "Default Title",
-        imageUrl: block?.image?.url || "",
-        imageDescription: block?.image?.description || "Image"
+        title,
+        description: paragraphs,
+        imageUrl,
+        imageDescription
       };
     } catch (error) {
+      console.error("Error extracting BlockImageText data:", error);
       return {
         title: "Default Title",
+        description: ["Default description"],
         imageUrl: "",
         imageDescription: "Image"
       };
     }
   };
 
-  console.log("data completo:", data);
-  console.log("homepageCollection:", data?.homepageCollection);
-  console.log("items:", data?.homepageCollection?.items);
-  console.log("block array:", data?.homepageCollection?.items?.[0]?.content?.links?.entries?.block);
-  
-  const blockData = getBlockImageText();
-  console.log("blog titulo", blockData)
+  const blockData = getBlockImageTextData();
 
   return (
     <>
       <IndexSectionInfo
         title={blockData.title}
-        description={[
-          "When a community has a vision — but lacks resources or meets systemic roadblocks — the Neighborhood Design Center can help.",
-          "We bring people together, build capacity, conduct research, and provide top-notch design and planning services (often for pro bono).",
-          "With the right tools, communities can secure funding for implementation and maintenance, and bring their dreams to life."
-        ]}
+        description={blockData.description}
         imageSrc={blockData.imageUrl}
         imageAlt={blockData.imageDescription}
       />

@@ -1,7 +1,7 @@
 
 // Use import.meta.env variables for configuration (Vite)
-const SPACE_ID = import.meta.env.CONTENTFUL_SPACE_ID || '';
-const ACCESS_TOKEN = import.meta.env.CONTENTFUL_ACCESS_TOKEN || '';
+const SPACE_ID = import.meta.env.CONTENTFUL_SPACE_ID || 'vlp0dhcdis5o';
+const ACCESS_TOKEN = import.meta.env.CONTENTFUL_ACCESS_TOKEN || 'b2aAP4V65lRopi1pD-GiIiPp2zlbEY-Y11b5y3HB5Xg';
 const ENVIRONMENT = import.meta.env.CONTENTFUL_ENVIRONMENT || 'master';
 
 // Construct the GraphQL endpoint URL
